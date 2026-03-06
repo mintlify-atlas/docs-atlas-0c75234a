@@ -1,0 +1,549 @@
+---
+title: "Accessibility Features"
+description: "Accessibility and usability features of the Club Las Aves registration form"
+---
+
+## Overview
+
+The Club Las Aves registration form is designed with accessibility and usability in mind. It includes dark mode support, responsive design, color-coded validation feedback, and considers various user needs.
+
+---
+
+## Dark Mode Toggle
+
+The form includes a dark mode feature that can be toggled with a single button click.
+
+### Dark Mode Button
+
+```html
+<button id="change-darkAndLigth">Cambiar color</button>
+```
+
+### Dark Mode Implementation
+
+```javascript
+document.getElementById("change-darkAndLigth").addEventListener("click", () => {
+    document.body.classList.toggle("dark-mode")
+})
+```
+
+**How it works:**
+- Click the "Cambiar color" button to toggle between light and dark modes
+- The button applies or removes the `dark-mode` class to the body element
+- All form elements automatically adjust their styling
+
+---
+
+## Dark Mode Styling
+
+When dark mode is enabled, the entire interface transforms to a dark theme:
+
+```css
+/* Cambiar modo oscuro */
+
+body.dark-mode {
+    background: #1a1a1a !important;
+    color: #ffff !important;
+}
+
+body.dark-mode .box-1,
+body.dark-mode .box-2 {
+    background: #2a2a2a !important;
+    color: #ffff !important;
+    border-color: #444 !important;
+}
+
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select {
+    background: #333 !important;
+    color: #fff !important;
+    border-color: #555 !important;
+}
+
+body.dark-mode button {
+    filter: brightness(0.8);
+}
+
+body.dark-mode label {
+    color: #ffff
+}
+
+body.dark-mode h1 {
+    color: #ffff !important
+}
+
+body.dark-mode h2 {
+    color: #ffff !important
+}
+
+body.dark-mode h3 {
+    color: #ffff !important
+}
+```
+
+### Dark Mode Color Scheme:
+
+<CardGroup cols={2}>
+  <Card title="Background" icon="palette">
+    **Body:** `#1a1a1a` (dark gray)
+    
+    **Form boxes:** `#2a2a2a` (lighter gray)
+  </Card>
+  <Card title="Text" icon="font">
+    **All text:** `#ffffff` (white)
+    
+    **Input borders:** `#555` (medium gray)
+  </Card>
+  <Card title="Inputs" icon="keyboard">
+    **Background:** `#333` (dark)
+    
+    **Text:** `#fff` (white)
+  </Card>
+  <Card title="Buttons" icon="hand-pointer">
+    **Effect:** `brightness(0.8)`
+    
+    Slightly dimmed for dark theme
+  </Card>
+</CardGroup>
+
+---
+
+## Dark Mode Button Styling
+
+The toggle button has custom styling to stand out:
+
+```css
+#change-darkAndLigth {
+    background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+    padding-left: 10px;
+    border-radius: 0px 10px 10px 0px;
+    margin-top: 40px;
+
+    &:hover {
+        background: linear-gradient(135deg, #dd4545 0%, #e53e3e 100%);
+        transition: 4s;
+    }
+}
+```
+
+<Note>
+The dark mode toggle button features a distinctive red gradient that stands out in both light and dark modes.
+</Note>
+
+---
+
+## Disability Selection
+
+The form includes a dedicated dropdown for users to indicate their disability status:
+
+```html
+<h3>Discapacidad</h3>
+<select name="discapacidades" required>
+    <option value></option>
+    <option value="No tengo" class>No tengo</option>
+    <option value="Tengo un 33%">Tengo un 33%</option>
+    <option value="Tengo un 75%">Tengo un 75%</option>
+</select>
+```
+
+### Disability Options:
+
+1. **No tengo** - No disability
+2. **Tengo un 33%** - 33% disability certification
+3. **Tengo un 75%** - 75% disability certification
+
+<Info>
+This field is marked as `required`, ensuring all users provide this information. This helps the club accommodate members with specific needs.
+</Info>
+
+### Disability Dropdown Styling:
+
+```css
+select {
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+}
+
+option {
+    background-color: #38a169;
+    color: white;
+    font-weight: bold;
+}
+```
+
+---
+
+## Responsive Design
+
+The form is fully responsive and adapts to different screen sizes:
+
+### Tablet Breakpoint (768px)
+
+```css
+@media (max-width: 768px) {
+    #club {
+        font-size: 2.2rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    form {
+        padding: 30px 25px;
+    }
+
+    .container {
+        gap: 30px;
+    }
+}
+```
+
+**Changes at 768px and below:**
+- Reduced heading sizes for better fit
+- Adjusted form padding
+- Reduced gap between form sections
+
+### Mobile Breakpoint (480px)
+
+```css
+@media (max-width: 480px) {
+    body {
+        padding: 30px 15px;
+    }
+
+    #club {
+        font-size: 1.9rem;
+    }
+
+    button {
+        width: 100%;
+        margin-right: 0;
+    }
+}
+```
+
+**Changes at 480px and below:**
+- Further reduced body padding
+- Smaller main heading
+- **Full-width buttons** for easier touch interaction
+
+<CardGroup cols={2}>
+  <Card title="Desktop" icon="desktop">
+    Full layout with side-by-side form sections
+    
+    Standard button sizing
+  </Card>
+  <Card title="Tablet" icon="tablet">
+    Adjusted spacing and font sizes
+    
+    Maintained two-column layout
+  </Card>
+  <Card title="Mobile" icon="mobile">
+    Stacked form sections
+    
+    Full-width buttons for touch
+  </Card>
+</CardGroup>
+
+---
+
+## Color-Coded Validation Feedback
+
+The form provides immediate visual feedback through color-coding:
+
+### Valid Input State
+
+```javascript
+nombreInput.style.borderColor = "#33c446ff";
+nombreInput.style.backgroundColor = "#f0fff8";
+msgNombre.style.color = "#0c7a3c";
+msgNombre.textContent = "Válido";
+```
+
+<Card title="Valid Input Colors" icon="check" color="#33c446ff">
+  - **Border:** `#33c446ff` (bright green)
+  - **Background:** `#f0fff8` (very light green)
+  - **Message:** `#0c7a3c` (dark green)
+  - **Text:** "Válido"
+</Card>
+
+### Invalid Input State
+
+```javascript
+nombreInput.style.borderColor = "#ff6b6b";
+nombreInput.style.backgroundColor = "#fff5f5";
+msgNombre.style.color = "#d62323";
+msgNombre.textContent = "Debe contener 2 caracteres mínimo y no más de 16 caracteres";
+```
+
+<Card title="Invalid Input Colors" icon="xmark" color="#ff6b6b">
+  - **Border:** `#ff6b6b` (red)
+  - **Background:** `#fff5f5` (very light red)
+  - **Message:** `#d62323` (dark red)
+  - **Error-specific message displayed**
+</Card>
+
+---
+
+## Focus States
+
+All interactive elements have clear focus states for keyboard navigation:
+
+```css
+input:focus,
+textarea:focus {
+    outline: none;
+    border-color: #6C63FF;
+    box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.15);
+    background: white;
+}
+```
+
+<Note>
+**Focus indicator:** Purple border (`#6C63FF`) with a subtle shadow ring for high visibility when navigating with keyboard.
+</Note>
+
+---
+
+## Screen Reader Considerations
+
+### Semantic HTML
+
+The form uses proper semantic HTML elements:
+- `<label>` elements properly associate with inputs
+- `<small>` elements for validation messages
+- `required` attribute on mandatory fields
+- Proper `type` attributes for inputs (email, tel, number, text)
+
+### Validation Messages
+
+```html
+<label>
+    Nombre
+    <input id="nombre" type="text" name="nombre" placeholder="Nombre" />
+    <small class="msg" id="msgNombre"></small>
+</label>
+```
+
+Each input has an associated message element that updates with validation status:
+- Messages are in the same label context
+- Live updates as user types
+- Clear error descriptions
+
+---
+
+## Input Accessibility Features
+
+### Text Input Enhancements
+
+```css
+input,
+textarea {
+    width: 100%;
+    padding: 12px 14px;
+    margin-top: 8px;
+    border: 2px solid #cbd5e0;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.9);
+}
+```
+
+**Accessibility features:**
+- Large touch targets (12px padding)
+- High contrast borders (2px solid)
+- Readable font size (0.95rem)
+- Smooth transitions for visual feedback
+
+### Checkbox Styling
+
+```css
+.listDeportes input[type="checkbox"] {
+    margin-right: 10px;
+    accent-color: #6C63FF;
+    width: auto;
+}
+```
+
+**Features:**
+- Custom accent color for better visibility
+- Adequate spacing between checkbox and label
+- Native checkbox behavior maintained
+
+---
+
+## Auto-save Functionality
+
+The form automatically saves user progress to prevent data loss:
+
+```javascript
+function guardarDatos() {
+    const datos = {
+        nombre: document.getElementById('nombre').value,
+        apellido: document.getElementById('apellido').value,
+        edad: document.getElementById('edad').value,
+        email: document.getElementById('email').value,
+        telefono: document.getElementById('telefono').value
+    };
+    localStorage.setItem('formDatos', JSON.stringify(datos));
+}
+
+// Escuchar cambios en los inputs
+document.querySelectorAll('#nombre, #apellido, #edad, #email, #telefono').forEach(input => {
+    input.addEventListener('input', guardarDatos);
+});
+```
+
+<Info>
+**Benefit:** If users accidentally close the page or their browser crashes, their form data is preserved and automatically restored when they return.
+</Info>
+
+---
+
+## Button Accessibility
+
+All buttons have clear visual states and large touch targets:
+
+```css
+button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    margin-right: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+```
+
+### Button Types:
+
+<AccordionGroup>
+  <Accordion title="Submit Button (Inscribirse)">
+    ```css
+    #Enviar {
+        background: linear-gradient(135deg, #6C63FF 0%, #5A52D5 100%);
+        color: white;
+        box-shadow: 0 4px 12px rgba(108, 99, 255, 0.4);
+    }
+    
+    #Enviar:hover {
+        background: linear-gradient(135deg, #5A52D5 0%, #4840B8 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(108, 99, 255, 0.5);
+    }
+    ```
+    Purple gradient with elevation on hover
+  </Accordion>
+  
+  <Accordion title="Reset Button (Limpiar Todo)">
+    ```css
+    #Reset {
+        background: linear-gradient(135deg, #94A3B8 0%, #7E8B9C 100%);
+        color: white;
+        box-shadow: 0 4px 12px rgba(148, 163, 184, 0.4);
+    }
+    ```
+    Gray gradient for secondary action
+  </Accordion>
+  
+  <Accordion title="Add Sport Button (Añadir deporte)">
+    ```css
+    #añadirBOM {
+        background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        color: white;
+        box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+    }
+    ```
+    Green gradient for additive action
+  </Accordion>
+  
+  <Accordion title="Remove Sport Button (Eliminar deporte)">
+    ```css
+    #eliminarBOM {
+        background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+        box-shadow: 0 4px 12px rgba(245, 101, 101, 0.3);
+    }
+    ```
+    Red gradient for destructive action
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Form Container Design
+
+The form uses a visually appealing "sticky note" design that's both aesthetic and functional:
+
+```css
+.box-1,
+.box-2 {
+    background: linear-gradient(135deg, #fffacd 0%, #fef9c0 100%);
+    border-radius: 3px;
+    box-shadow:
+        0 4px 6px rgba(0, 0, 0, 0.15),
+        0 1px 3px rgba(0, 0, 0, 0.1),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+    overflow: visible;
+    animation: fadeIn 0.8s ease-out;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    transform: rotate(-1deg);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.box-1:hover,
+.box-2:hover {
+    transform: rotate(0deg) translateY(-4px);
+    box-shadow:
+        0 8px 16px rgba(0, 0, 0, 0.2),
+        0 3px 6px rgba(0, 0, 0, 0.15);
+}
+```
+
+<Warning>
+While the playful rotation adds visual interest, it maintains readability and doesn't interfere with form functionality.
+</Warning>
+
+---
+
+## Accessibility Best Practices Implemented
+
+<Steps>
+  <Step title="Visual Feedback">
+    Color-coded borders and backgrounds for validation states
+  </Step>
+  <Step title="Keyboard Navigation">
+    Clear focus states with purple borders and shadow rings
+  </Step>
+  <Step title="Responsive Design">
+    Mobile-first approach with full-width buttons on small screens
+  </Step>
+  <Step title="Dark Mode">
+    User-controlled theme switching for comfort and accessibility
+  </Step>
+  <Step title="Semantic HTML">
+    Proper use of labels, input types, and required attributes
+  </Step>
+  <Step title="Real-time Validation">
+    Immediate feedback reduces user frustration
+  </Step>
+  <Step title="Auto-save">
+    Preserves user data to prevent loss
+  </Step>
+  <Step title="Clear Error Messages">
+    Descriptive validation messages in plain language
+  </Step>
+</Steps>

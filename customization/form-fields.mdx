@@ -1,0 +1,331 @@
+---
+title: "Customizing Form Fields"
+description: "Modifying and extending form fields in the Club Las Aves registration form"
+---
+
+The registration form includes several validated fields. This guide shows you how to customize existing fields and add new ones with proper validation.
+
+## Existing Form Fields
+
+The form currently includes these validated fields:
+
+- **Nombre** (Name): 2-16 characters, no numbers
+- **Apellido** (Surname): 2-32 characters, no numbers
+- **Edad** (Age): Number between 16 and 121
+- **Email**: Minimum 6 characters, must include @ and .
+- **Teléfono** (Phone): Spanish format (9 digits starting with 6, 7, or 9)
+- **Discapacidad** (Disability): Dropdown with 3 options
+- **Deportes** (Sports): Checkboxes with 1-3 selection limit
+- **Observaciones** (Observations): Textarea
+
+## Validation Pattern
+
+All validated fields follow a consistent pattern in `app.js`:
+
+```javascript
+document.getElementById("fieldId").addEventListener("input", function () {
+    var fieldInput = this;
+    var msgElement = document.getElementById("msgFieldId");
+    var value = fieldInput.value;
+
+    // Validation logic
+    if (/* validation fails */) {
+        fieldInput.style.borderColor = "#ff6b6b";
+        fieldInput.style.backgroundColor = "#fff5f5";
+        msgElement.style.color = "#d62323";
+        msgElement.textContent = "Error message";
+    } else {
+        fieldInput.style.borderColor = "#33c446ff";
+        fieldInput.style.backgroundColor = "#f0fff8";
+        msgElement.style.color = "#0c7a3c";
+        msgElement.textContent = "Válido";
+    }
+});
+```
+
+## Adding a New Field
+
+Let's add a "DNI" (ID number) field with validation:
+
+### Step 1: Add HTML
+
+Add the field in `index.html` within the first form:
+
+```html
+<label>
+    DNI
+    <input id="dni" type="text" name="dni" 
+           placeholder="12345678A" maxlength="9" />
+    <small class="msg" id="msgDni"></small>
+</label>
+```
+
+### Step 2: Add JavaScript Validation
+
+Add validation in `app.js`:
+
+```javascript
+// 7. Validación de DNI
+document.getElementById("dni").addEventListener("input", function () {
+    var dniInput = this;
+    var msgDni = document.getElementById("msgDni");
+    var dni = dniInput.value.trim().toUpperCase();
+
+    // Spanish DNI format: 8 numbers + 1 letter
+    var dniRegex = /^[0-9]{8}[A-Z]$/;
+
+    if (dni.length === 0) {
+        dniInput.style.borderColor = "#ff6b6b";
+        dniInput.style.backgroundColor = "#fff5f5";
+        msgDni.style.color = "#d62323";
+        msgDni.textContent = "El DNI es obligatorio";
+    } else if (!dniRegex.test(dni)) {
+        dniInput.style.borderColor = "#ff6b6b";
+        dniInput.style.backgroundColor = "#fff5f5";
+        msgDni.style.color = "#d62323";
+        msgDni.textContent = "DNI no válido (8 números + letra)";
+    } else {
+        dniInput.style.borderColor = "#33c446ff";
+        dniInput.style.backgroundColor = "#f0fff8";
+        msgDni.style.color = "#0c7a3c";
+        msgDni.textContent = "Válido";
+    }
+});
+```
+
+### Step 3: Add Submit Validation
+
+Add validation to the submit button handler:
+
+```javascript
+// Inside the 'Enviar' button click event:
+
+// 9. Validar DNI
+var dni = document.getElementById('dni').value.trim().toUpperCase();
+var dniRegex = /^[0-9]{8}[A-Z]$/;
+if (!dniRegex.test(dni)) {
+    hayErrores = true;
+    erroresTexto = erroresTexto + "• DNI\n";
+}
+```
+
+## Modifying Existing Field Constraints
+
+### Changing Length Limits
+
+To modify the nombre (name) field to accept 3-20 characters:
+
+```javascript
+document.getElementById("nombre").addEventListener("input", function () {
+    var nombreInput = this;
+    var msgNombre = document.getElementById("msgNombre");
+    var nombre = nombreInput.value.replace(/[0-9]/g, '');
+    nombreInput.value = nombre;
+
+    // Changed from 2-16 to 3-20
+    if (nombre.length < 3 || nombre.length > 20) {
+        nombreInput.style.borderColor = "#ff6b6b";
+        nombreInput.style.backgroundColor = "#fff5f5";
+        msgNombre.style.color = "#d62323";
+        msgNombre.textContent = "Debe contener 3 caracteres mínimo y no más de 20 caracteres";
+    } else {
+        nombreInput.style.borderColor = "#33c446ff";
+        nombreInput.style.backgroundColor = "#f0fff8";
+        msgNombre.style.color = "#0c7a3c";
+        msgNombre.textContent = "Válido";
+    }
+});
+```
+
+### Changing Age Range
+
+To allow ages from 12 to 100:
+
+```javascript
+document.getElementById("edad").addEventListener("input", function () {
+    var edadInput = this;
+    var msgEdad = document.getElementById("msgEdad");
+    var edad = parseInt(edadInput.value);
+
+    // Changed from 16-121 to 12-100
+    if (isNaN(edad) || edad < 12 || edad > 100) {
+        edadInput.style.borderColor = "#ff6b6b";
+        edadInput.style.backgroundColor = "#fff5f5";
+        msgEdad.style.color = "#d62323";
+        msgEdad.textContent = "Debe ser número entre 12 y 100";
+    } else {
+        edadInput.style.borderColor = "#33c446ff";
+        edadInput.style.backgroundColor = "#f0fff8";
+        msgEdad.style.color = "#0c7a3c";
+        msgEdad.textContent = "Válido";
+    }
+});
+```
+
+<Warning>
+Don't forget to update the corresponding validation in the submit button event listener when you modify field constraints.
+</Warning>
+
+## Modifying Field Labels and Placeholders
+
+Change labels and placeholders directly in the HTML:
+
+```html
+<!-- Before -->
+<label>
+    Nombre
+    <input id="nombre" type="text" name="nombre" placeholder="Nombre" />
+    <small class="msg" id="msgNombre"></small>
+</label>
+
+<!-- After -->
+<label>
+    First Name
+    <input id="nombre" type="text" name="nombre" placeholder="Enter your first name" />
+    <small class="msg" id="msgNombre"></small>
+</label>
+```
+
+## Modifying Disability Dropdown
+
+The disability dropdown can be customized in `index.html`:
+
+### Current Implementation
+
+```html
+<select name="discapacidades" required>
+    <option value></option>
+    <option value="No tengo">No tengo</option>
+    <option value="Tengo un 33%">Tengo un 33%</option>
+    <option value="Tengo un 75%">Tengo un 75%</option>
+</select>
+```
+
+### Custom Options Example
+
+```html
+<select name="discapacidades" required>
+    <option value="">Select an option</option>
+    <option value="none">No disability</option>
+    <option value="mobility">Mobility impairment</option>
+    <option value="visual">Visual impairment</option>
+    <option value="hearing">Hearing impairment</option>
+    <option value="other">Other</option>
+</select>
+```
+
+## Advanced: Custom Validation Rules
+
+### Adding Email Domain Restriction
+
+Restrict email addresses to specific domains:
+
+```javascript
+document.getElementById("email").addEventListener("input", function () {
+    var emailInput = this;
+    var msgEmail = document.getElementById("msgEmail");
+    var email = emailInput.value;
+
+    // Check basic email format
+    if (email.length < 6 || !email.includes("@") || !email.includes(".")) {
+        emailInput.style.borderColor = "#ff6b6b";
+        emailInput.style.backgroundColor = "#fff5f5";
+        msgEmail.style.color = "#d62323";
+        msgEmail.textContent = "Debe tener @ y ., min 6 chars";
+    } 
+    // Check for blocked domains
+    else if (email.includes("@yahoo") || email.includes("@tempmail")) {
+        emailInput.style.borderColor = "#ff6b6b";
+        emailInput.style.backgroundColor = "#fff5f5";
+        msgEmail.style.color = "#d62323";
+        msgEmail.textContent = "Dominio de email no permitido";
+    } 
+    else {
+        emailInput.style.borderColor = "#33c446ff";
+        emailInput.style.backgroundColor = "#f0fff8";
+        msgEmail.style.color = "#0c7a3c";
+        msgEmail.textContent = "Válido";
+    }
+});
+```
+
+### Adding Password Strength Validation
+
+Add a password field with strength requirements:
+
+**HTML:**
+```html
+<label>
+    Contraseña
+    <input id="password" type="password" name="password" 
+           placeholder="Contraseña segura" />
+    <small class="msg" id="msgPassword"></small>
+</label>
+```
+
+**JavaScript:**
+```javascript
+document.getElementById("password").addEventListener("input", function () {
+    var passwordInput = this;
+    var msgPassword = document.getElementById("msgPassword");
+    var password = passwordInput.value;
+
+    // Check: min 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special char
+    var hasUpperCase = /[A-Z]/.test(password);
+    var hasLowerCase = /[a-z]/.test(password);
+    var hasNumber = /[0-9]/.test(password);
+    var hasSpecialChar = /[!@#$%^&*]/.test(password);
+    var minLength = password.length >= 8;
+
+    if (!minLength) {
+        passwordInput.style.borderColor = "#ff6b6b";
+        passwordInput.style.backgroundColor = "#fff5f5";
+        msgPassword.style.color = "#d62323";
+        msgPassword.textContent = "Mínimo 8 caracteres";
+    } else if (!hasUpperCase || !hasLowerCase) {
+        passwordInput.style.borderColor = "#ff6b6b";
+        passwordInput.style.backgroundColor = "#fff5f5";
+        msgPassword.style.color = "#d62323";
+        msgPassword.textContent = "Debe incluir mayúsculas y minúsculas";
+    } else if (!hasNumber) {
+        passwordInput.style.borderColor = "#ff6b6b";
+        passwordInput.style.backgroundColor = "#fff5f5";
+        msgPassword.style.color = "#d62323";
+        msgPassword.textContent = "Debe incluir al menos un número";
+    } else if (!hasSpecialChar) {
+        passwordInput.style.borderColor = "#ff6b6b";
+        passwordInput.style.backgroundColor = "#fff5f5";
+        msgPassword.style.color = "#d62323";
+        msgPassword.textContent = "Debe incluir un carácter especial (!@#$%^&*)";
+    } else {
+        passwordInput.style.borderColor = "#33c446ff";
+        passwordInput.style.backgroundColor = "#f0fff8";
+        msgPassword.style.color = "#0c7a3c";
+        msgPassword.textContent = "Contraseña segura";
+    }
+});
+```
+
+<Tip>
+When adding new fields, maintain the same visual feedback pattern (border colors, background colors, and message styling) for consistency with the existing form design.
+</Tip>
+
+## Field Styling Reference
+
+### Success State
+```javascript
+fieldInput.style.borderColor = "#33c446ff";
+fieldInput.style.backgroundColor = "#f0fff8";
+msgElement.style.color = "#0c7a3c";
+msgElement.textContent = "Válido";
+```
+
+### Error State
+```javascript
+fieldInput.style.borderColor = "#ff6b6b";
+fieldInput.style.backgroundColor = "#fff5f5";
+msgElement.style.color = "#d62323";
+msgElement.textContent = "Error message";
+```
+
+These consistent styles ensure all fields have uniform visual feedback across the form.

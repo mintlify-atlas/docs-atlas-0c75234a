@@ -1,0 +1,559 @@
+---
+title: "Features"
+description: "Comprehensive overview of the Club Las Aves registration form features and capabilities"
+---
+
+## Overview
+
+The Club Las Aves registration form is a modern, feature-rich frontend application designed to provide an intuitive and accessible user experience for sports club registrations. Built with vanilla JavaScript, HTML5, and CSS3, it demonstrates advanced form validation, dynamic UI manipulation, and responsive design principles.
+
+<CardGroup cols={2}>
+  <Card title="Real-time Validation" icon="check-circle">
+    Instant feedback as users type with visual indicators for valid/invalid inputs
+  </Card>
+  <Card title="Dynamic Sports Selection" icon="plus-circle">
+    Add and remove sports dynamically with intelligent validation
+  </Card>
+  <Card title="Dark Mode" icon="moon">
+    Toggle between light and dark themes for improved accessibility
+  </Card>
+  <Card title="Data Persistence" icon="database">
+    Automatic form data saving using browser localStorage
+  </Card>
+  <Card title="Responsive Design" icon="mobile">
+    Fully responsive layout with animated UI elements
+  </Card>
+  <Card title="Spanish Phone Validation" icon="phone">
+    Validates Spanish mobile numbers (6/7/9 prefix, 9 digits)
+  </Card>
+</CardGroup>
+
+---
+
+## 1. Real-time Form Validation
+
+The form provides instant visual feedback as users input data, with color-coded borders and descriptive error messages.
+
+### Name Validation
+
+Automatically removes numbers and validates length (2-16 characters):
+
+```javascript app.js
+document.getElementById("nombre").addEventListener("input", function () {
+    var nombreInput = this;
+    var msgNombre = document.getElementById("msgNombre");
+
+    // Eliminar números del valor
+    var nombre = nombreInput.value.replace(/[0-9]/g, '');
+    nombreInput.value = nombre;
+
+    // Validar longitud y contenido
+    if (nombre.length < 2 || nombre.length > 16) {
+        nombreInput.style.borderColor = "#ff6b6b";
+        nombreInput.style.backgroundColor = "#fff5f5";
+        msgNombre.style.color = "#d62323";
+        msgNombre.textContent = "Debe contener 2 caracteres mínimo y no más de 16 caracteres";
+    } else {
+        nombreInput.style.borderColor = "#33c446ff";
+        nombreInput.style.backgroundColor = "#f0fff8";
+        msgNombre.style.color = "#0c7a3c";
+        msgNombre.textContent = "Válido";
+    }
+});
+```
+
+### Visual Feedback System
+
+<Note>
+  **Valid inputs** display a green border (`#33c446ff`) with a light green background (`#f0fff8`) and a "Válido" message.
+  
+  **Invalid inputs** show a red border (`#ff6b6b`) with a light red background (`#fff5f5`) and descriptive error messages.
+</Note>
+
+### Age Validation
+
+Ensures users are between 16 and 121 years old:
+
+```javascript app.js
+document.getElementById("edad").addEventListener("input", function () {
+    var edadInput = this;
+    var msgEdad = document.getElementById("msgEdad");
+    var edad = parseInt(edadInput.value);
+
+    if (isNaN(edad) || edad < 16 || edad > 121) {
+        edadInput.style.borderColor = "#ff6b6b";
+        edadInput.style.backgroundColor = "#fff5f5";
+        msgEdad.style.color = "#d62323";
+        msgEdad.textContent = "Debe ser número entre 16 y 121";
+    } else {
+        edadInput.style.borderColor = "#33c446ff";
+        edadInput.style.backgroundColor = "#f0fff8";
+        msgEdad.style.color = "#0c7a3c";
+        msgEdad.textContent = "Válido";
+    }
+});
+```
+
+### Email Validation
+
+Validates basic email format requirements:
+
+```javascript app.js
+document.getElementById("email").addEventListener("input", function () {
+    var emailInput = this;
+    var msgEmail = document.getElementById("msgEmail");
+    var email = emailInput.value;
+
+    if (email.length < 6 || !email.includes("@") || !email.includes(".")) {
+        emailInput.style.borderColor = "#ff6b6b";
+        emailInput.style.backgroundColor = "#fff5f5";
+        msgEmail.style.color = "#d62323";
+        msgEmail.textContent = "Debe tener @ y ., min 6 chars, no yahoo";
+    } else {
+        emailInput.style.borderColor = "#33c446ff";
+        emailInput.style.backgroundColor = "#f0fff8";
+        msgEmail.style.color = "#0c7a3c";
+        msgEmail.textContent = "Válido";
+    }
+});
+```
+
+---
+
+## 2. Dynamic Sport Selection
+
+Users can dynamically add and remove sports from a predefined list beyond the default options (Natación, Fútbol, Pádel, Tenis).
+
+### Adding Sports
+
+The system maintains an array of additional sports and adds them one at a time:
+
+```javascript app.js
+let deportes = ["Golf", "Boxeo", "Bádminton", "Frontón", "Hockey"];
+let deportesAñadidos = []; // Array para rastrear qué deportes se añadieron
+
+// Añadir deporte
+document.getElementById("añadirBOM").addEventListener("click", function (e) {
+    e.preventDefault();
+    var msgMods = document.getElementById('msgMods');
+
+    if (deportesAñadidos.length < deportes.length) {
+        let lista = document.getElementById("listDeportes");
+        let deporte = deportes[deportesAñadidos.length];
+
+        let label = document.createElement("label");
+        let input = document.createElement("input");
+
+        input.type = "checkbox";
+        input.className = "deporte añadido";
+        input.name = "deportes";
+        input.value = deporte.toLowerCase();
+
+        input.addEventListener('change', validarCheckboxes);
+
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(" " + deporte));
+        lista.appendChild(label);
+
+        deportesAñadidos.push({
+            deporte: deporte,
+            label: label
+        });
+        validarCheckboxes();
+    } else {
+        msgMods.style.color = '#d62323';
+        msgMods.textContent = 'Llegaste al límite, no hay más deportes :(';
+    }
+});
+```
+
+### Checkbox Validation
+
+Ensures users select between 1 and 3 sports:
+
+```javascript app.js
+function validarCheckboxes() {
+    var checkboxes = document.querySelectorAll('input[name="deportes"]:checked');
+    var msgMods = document.getElementById('msgMods');
+    var seleccionados = checkboxes.length;
+
+    if (seleccionados < 1) {
+        msgMods.style.color = '#d62323';
+        msgMods.textContent = 'Debe seleccionar al menos 1 deporte';
+        return false;
+    } else if (seleccionados > 3) {
+        msgMods.style.color = '#d62323';
+        msgMods.textContent = 'No puedes seleccionar mas de 3 deportes';
+        return false;
+    } else {
+        msgMods.style.color = '#0c7a3c';
+        msgMods.textContent = 'Válido (' + seleccionados + ' seleccionados)';
+        return true;
+    }
+}
+```
+
+<Warning>
+  Users must select **at least 1 sport** and **no more than 3 sports** to successfully submit the form.
+</Warning>
+
+### Removing Sports
+
+Removes the most recently added sport:
+
+```javascript app.js
+document.getElementById("eliminarBOM").addEventListener("click", function (e) {
+    e.preventDefault();
+    const msgMods = document.getElementById('msgMods');
+
+    if (deportesAñadidos.length > 0) {
+        let ultimo = deportesAñadidos.pop();
+        ultimo.label.remove(); // Elimina el label y el checkbox dentro
+
+        // Volver a contar después de eliminar
+        validarCheckboxes();
+    }
+});
+```
+
+---
+
+## 3. Dark Mode Toggle
+
+A simple but effective dark mode implementation that toggles CSS classes for improved accessibility and reduced eye strain.
+
+### Toggle Implementation
+
+```javascript app.js
+document.getElementById("change-darkAndLigth").addEventListener("click", () => {
+    document.body.classList.toggle("dark-mode")
+})
+```
+
+### Dark Mode Styling
+
+```css style.css
+body.dark-mode {
+    background: #1a1a1a !important;
+    color: #ffff !important;
+}
+
+body.dark-mode .box-1,
+body.dark-mode .box-2 {
+    background: #2a2a2a !important;
+    color: #ffff !important;
+    border-color: #444 !important;
+}
+
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select {
+    background: #333 !important;
+    color: #fff !important;
+    border-color: #555 !important;
+}
+
+body.dark-mode button {
+    filter: brightness(0.8);
+}
+```
+
+<Info>
+  The dark mode button is styled with a red gradient and positioned at the top of the first form section for easy access.
+</Info>
+
+---
+
+## 4. Local Storage Persistence
+
+The form automatically saves user input to the browser's localStorage, preventing data loss if the page is accidentally closed or refreshed.
+
+### Saving Data
+
+```javascript app.js
+function guardarDatos() {
+    const datos = {
+        nombre: document.getElementById('nombre').value,
+        apellido: document.getElementById('apellido').value,
+        edad: document.getElementById('edad').value,
+        email: document.getElementById('email').value,
+        telefono: document.getElementById('telefono').value
+    };
+    localStorage.setItem('formDatos', JSON.stringify(datos));
+}
+
+// Escuchar cambios en los inputs
+document.querySelectorAll('#nombre, #apellido, #edad, #email, #telefono').forEach(input => {
+    input.addEventListener('input', guardarDatos);
+});
+```
+
+### Loading Saved Data
+
+```javascript app.js
+window.addEventListener('load', function () {
+    const guardado = localStorage.getItem('formDatos');
+    if (guardado) {
+        const datos = JSON.parse(guardado);
+
+        // Rellenar campos
+        document.getElementById('nombre').value = datos.nombre || '';
+        document.getElementById('apellido').value = datos.apellido || '';
+        document.getElementById('edad').value = datos.edad || '';
+        document.getElementById('email').value = datos.email || '';
+        document.getElementById('telefono').value = datos.telefono || '';
+    }
+});
+```
+
+<Tip>
+  Form data is automatically cleared from localStorage when the user successfully submits the form.
+</Tip>
+
+---
+
+## 5. Responsive Design with Animations
+
+The application features a fully responsive layout with smooth animations and visual effects.
+
+### Animated Header
+
+The Club Las Aves title uses Animate.css for a dynamic entrance:
+
+```html index.html
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+<h1 class="animate__backInUp" id="club">Club Las Aves</h1>
+```
+
+### Sticky Note Design
+
+The form sections are styled as interactive sticky notes with pin effects:
+
+```css style.css
+.box-1,
+.box-2 {
+    background: linear-gradient(135deg, #fffacd 0%, #fef9c0 100%);
+    border-radius: 3px;
+    box-shadow:
+        0 4px 6px rgba(0, 0, 0, 0.15),
+        0 1px 3px rgba(0, 0, 0, 0.1),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+    animation: fadeIn 0.8s ease-out;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transform: rotate(-1deg);
+}
+
+.box-1:hover,
+.box-2:hover {
+    transform: rotate(0deg) translateY(-4px);
+    box-shadow:
+        0 8px 16px rgba(0, 0, 0, 0.2),
+        0 3px 6px rgba(0, 0, 0, 0.15);
+}
+```
+
+### Fade-In Animation
+
+```css style.css
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+```
+
+### Mobile Responsiveness
+
+```css style.css
+@media (max-width: 768px) {
+    #club {
+        font-size: 2.2rem;
+    }
+    h2 {
+        font-size: 1.5rem;
+    }
+    form {
+        padding: 30px 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 30px 15px;
+    }
+    #club {
+        font-size: 1.9rem;
+    }
+    button {
+        width: 100%;
+        margin-right: 0;
+    }
+}
+```
+
+---
+
+## 6. Spanish Phone Number Validation
+
+The form includes specific validation for Spanish mobile phone numbers with real-time feedback.
+
+### Phone Validation Function
+
+```javascript app.js
+function validarTelefono() {
+    var telefono = document.getElementById('telefono');
+    var msgTelefono = document.getElementById('msgTelefono');
+    var telefonoValue = telefono.value.trim();
+
+    // Expresión regular para teléfono español (9 dígitos)
+    var telefonoRegex = /^[679][0-9]{8}$/;
+
+    if (telefonoValue === '') {
+        telefono.style.borderColor = "#ff6b6b";
+        telefono.style.backgroundColor = "#fff5f5";
+        msgTelefono.style.color = '#d62323';
+        msgTelefono.textContent = 'El teléfono es obligatorio';
+        return false;
+    } else if (!telefonoRegex.test(telefonoValue)) {
+        telefono.style.borderColor = "#ff6b6b";
+        telefono.style.backgroundColor = "#fff5f5";
+        msgTelefono.style.color = '#d62323';
+        msgTelefono.textContent = 'Teléfono no válido (9 dígitos, empezando por 6, 7 o 9)';
+        return false;
+    } else {
+        telefono.style.borderColor = "#33c446ff";
+        telefono.style.backgroundColor = "#f0fff8";
+        msgTelefono.style.color = '#0c7a3c';
+        msgTelefono.textContent = '✓ Teléfono válido';
+        return true;
+    }
+}
+
+// Event listener para validar en tiempo real mientras se escribe
+document.getElementById('telefono').addEventListener('input', validarTelefono);
+
+// También validar al perder el foco
+document.getElementById('telefono').addEventListener('blur', validarTelefono);
+```
+
+<Info>
+  Valid Spanish phone numbers must:
+  - Be exactly **9 digits** long
+  - Start with **6**, **7**, or **9**
+  - Contain only numeric characters
+</Info>
+
+---
+
+## 7. Multi-Field Form with Disability Options
+
+The form includes a comprehensive set of fields including a disability selection dropdown.
+
+### Form Structure
+
+```html index.html
+<h3>Discapacidad</h3>
+<select name="discapacidades" required>
+    <option value></option>
+    <option value="No tengo" class>No tengo</option>
+    <option value="Tengo un 33%">Tengo un 33%</option>
+    <option value="Tengo un 75%">Tengo un 75%</option>
+</select>
+```
+
+### Complete Field List
+
+<CardGroup cols={2}>
+  <Card title="Personal Information">
+    - Nombre (Name)
+    - Apellido (Last Name)
+    - Edad (Age)
+  </Card>
+  <Card title="Contact Details">
+    - Email
+    - Teléfono (Phone)
+  </Card>
+  <Card title="Sports & Activities">
+    - Deportes (Sports) - Multiple selection
+    - Discapacidad (Disability status)
+  </Card>
+  <Card title="Additional Notes">
+    - Observaciones (Observations) - Text area
+  </Card>
+</CardGroup>
+
+### Form Submission Validation
+
+The form validates all fields before submission:
+
+```javascript app.js
+document.getElementById('Enviar').addEventListener('click', function (e) {
+    e.preventDefault();
+
+    var hayErrores = false;
+    var erroresTexto = "";
+
+    // Validar select de discapacidad
+    var discapacidad = document.querySelector('select[name="discapacidades"]');
+    if (discapacidad && discapacidad.value === "") {
+        hayErrores = true;
+        erroresTexto = erroresTexto + "• Discapacidad\n";
+    }
+
+    // ... other validations ...
+
+    if (hayErrores) {
+        alert('ERROR: Campos no válidos:\n' + erroresTexto);
+        return;
+    }
+
+    alert('Formulario enviado correctamente');
+});
+```
+
+### Reset Functionality
+
+The form includes a complete reset function that clears all inputs and validation messages:
+
+```javascript app.js
+document.getElementById("Reset").addEventListener("click", () => {
+    document.querySelectorAll("form").forEach(form => {
+        form.reset();
+    });
+
+    document.querySelectorAll(".msg").forEach(msg => {
+        msg.textContent = "";
+    });
+
+    document.querySelectorAll("input").forEach(input => {
+        input.className = "DefaultBorder"
+    });
+})
+```
+
+<Note>
+  The disability selection is **required** and must be filled out before the form can be successfully submitted.
+</Note>
+
+---
+
+## Summary
+
+The Club Las Aves registration form demonstrates modern frontend development practices with:
+
+- **Zero external frameworks** - Pure vanilla JavaScript, HTML5, and CSS3
+- **Real-time validation** - Instant feedback on all form fields
+- **Accessibility features** - Dark mode toggle and semantic HTML
+- **Data persistence** - localStorage integration to prevent data loss
+- **Responsive design** - Works seamlessly across desktop, tablet, and mobile devices
+- **Dynamic DOM manipulation** - Add/remove sports functionality
+- **Localized validation** - Spanish phone number format validation
+- **Visual design excellence** - Sticky note aesthetic with smooth animations

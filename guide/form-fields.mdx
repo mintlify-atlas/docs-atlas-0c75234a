@@ -1,0 +1,231 @@
+---
+title: "Form Fields"
+description: "Complete guide to all form fields in the Club Las Aves registration form"
+---
+
+## Overview
+
+The Club Las Aves registration form collects member information through several input fields. Each field is validated in real-time as users type, providing immediate feedback.
+
+## Personal Information Fields
+
+### Name (Nombre)
+
+The name field accepts text input for the member's first name.
+
+```html
+<label>
+    Nombre
+    <input id="nombre" type="text" name="nombre" placeholder="Nombre" />
+    <small class="msg" id="msgNombre"></small>
+</label>
+```
+
+**Accepts:**
+- Letters only (numbers are automatically removed)
+- 2-16 characters
+- Any alphabetic characters
+
+**Validation feedback:** Displayed in the `msgNombre` element below the input field.
+
+---
+
+### Last Name (Apellido)
+
+The last name field accepts text input for the member's surname.
+
+```html
+<label>
+    Apellido
+    <input id="apellido" type="text" name="apellido" placeholder="Apellido">
+    <small class="msg" id="msgApellido"></small>
+</label>
+```
+
+**Accepts:**
+- Letters only (numbers are automatically removed)
+- 2-32 characters
+- Any alphabetic characters
+
+**Validation feedback:** Displayed in the `msgApellido` element below the input field.
+
+---
+
+### Age (Edad)
+
+The age field accepts numeric input to verify the member meets age requirements.
+
+```html
+<label>
+    Edad
+    <input placeholder="Edad" id="edad" name="edad" type="number" min="0" />
+    <small class="msg" id="msgEdad"></small>
+</label>
+```
+
+**Accepts:**
+- Numbers only
+- Must be between 16 and 121
+- Integer values
+
+**Validation feedback:** Displayed in the `msgEdad` element below the input field.
+
+---
+
+## Contact Information Fields
+
+### Email
+
+The email field collects the member's email address for communication.
+
+```html
+<label>
+    Email
+    <input id="email" type="email" name="email" placeholder="Email" />
+    <small class="msg" id="msgEmail"></small>
+</label>
+```
+
+**Accepts:**
+- Minimum 6 characters
+- Must contain `@` symbol
+- Must contain `.` (period)
+- Standard email format
+
+**Validation feedback:** Displayed in the `msgEmail` element below the input field.
+
+---
+
+### Phone (Telefono)
+
+The phone field accepts Spanish mobile phone numbers.
+
+```html
+<label>
+    Telefono
+    <input id="telefono" type="tel" name="telefono" 
+           placeholder="Telefono" maxlength="9" input="validarTelefono()">
+    <small class="msg" id="msgTelefono"></small>
+</label>
+```
+
+**Accepts:**
+- Exactly 9 digits
+- Must start with 6, 7, or 9 (Spanish mobile format)
+- No spaces or special characters
+
+**Example valid numbers:** 612345678, 723456789, 987654321
+
+**Validation feedback:** Displayed in the `msgTelefono` element below the input field.
+
+---
+
+## Sports and Preferences
+
+### Disability Selection (Discapacidad)
+
+A dropdown menu to indicate if the member has any disability benefits.
+
+```html
+<h3>Discapacidad</h3>
+<select name="discapacidades" required>
+    <option value></option>
+    <option value="No tengo" class>No tengo</option>
+    <option value="Tengo un 33%">Tengo un 33%</option>
+    <option value="Tengo un 75%">Tengo un 75%</option>
+</select>
+```
+
+**Options:**
+- Empty (must be selected)
+- "No tengo" - No disability
+- "Tengo un 33%" - 33% disability certification
+- "Tengo un 75%" - 75% disability certification
+
+**Required:** This field must be selected before form submission.
+
+---
+
+### Sports Checkboxes
+
+Members can select 1-3 sports they're interested in participating in.
+
+**Default sports (always available):**
+
+```html
+<div class="listDeportes" id="listDeportes">
+    <label>
+        <input type="checkbox" name="deportes" value="natacion">
+        Natación
+    </label>
+    <label>
+        <input type="checkbox" name="deportes" value="futbol">
+        Fútbol
+    </label>
+    <label>
+        <input type="checkbox" name="deportes" value="padel">
+        Pádel
+    </label>
+    <label>
+        <input type="checkbox" name="deportes" value="tenis">
+        Tenis
+    </label>
+</div>
+<small class="msg" id="msgMods"></small>
+```
+
+**Additional sports** can be added dynamically using the "Añadir deporte" button. See [Sport Selection](/guide/sport-selection) for more details.
+
+---
+
+### Observations (Observaciones)
+
+A free-text area for additional comments or special requirements.
+
+```html
+<label>
+    <textarea name="observaciones" id="observaciones" 
+              placeholder="Observaciones"></textarea>
+</label>
+```
+
+**Accepts:**
+- Any text input
+- Multiple lines
+- Optional field
+- Resizable vertically
+
+---
+
+## Form Actions
+
+The form includes three action buttons:
+
+```html
+<button id="Enviar" type="submit">Inscribirse</button>
+<button id="Reset" type="button">Limpiar Todo</button>
+```
+
+### Submit Button (Inscribirse)
+- Validates all fields before submission
+- Shows alert with validation errors if any fields are invalid
+- Only submits when all validation passes
+
+### Reset Button (Limpiar Todo)
+- Clears all form fields
+- Resets validation messages
+- Resets border colors to default
+
+---
+
+## Visual Feedback
+
+All input fields provide color-coded validation feedback:
+
+<Note>
+**Valid input:** Green border (#33c446ff) with light green background (#f0fff8)
+
+**Invalid input:** Red border (#ff6b6b) with light red background (#fff5f5)
+</Note>
+
+Validation messages appear below each field in real-time as you type.

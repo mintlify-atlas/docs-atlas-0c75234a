@@ -1,0 +1,298 @@
+---
+title: "Sport Selection"
+description: "How to select and manage sports in the registration form"
+---
+
+## Overview
+
+The Club Las Aves registration form allows members to select between 1 and 3 sports they wish to participate in. The form includes 4 default sports and provides the ability to add up to 5 additional sports dynamically.
+
+---
+
+## Default Sports
+
+The form initially displays four sports that are always available:
+
+```html
+<div class="listDeportes" id="listDeportes">
+    <label>
+        <input type="checkbox" name="deportes" value="natacion">
+        Natación
+    </label>
+    <label>
+        <input type="checkbox" name="deportes" value="futbol">
+        Fútbol
+    </label>
+    <label>
+        <input type="checkbox" name="deportes" value="padel">
+        Pádel
+    </label>
+    <label>
+        <input type="checkbox" name="deportes" value="tenis">
+        Tenis
+    </label>
+</div>
+```
+
+### Default Sports List:
+1. **Natación** (Swimming)
+2. **Fútbol** (Soccer)
+3. **Pádel** (Padel)
+4. **Tenis** (Tennis)
+
+<Note>
+These four sports are permanently available and cannot be removed from the list.
+</Note>
+
+---
+
+## Additional Sports
+
+The form includes 5 additional sports that can be dynamically added using the "Añadir deporte" button:
+
+```javascript
+let deportes = ["Golf", "Boxeo", "Bádminton", "Frontón", "Hockey"];
+let deportesAñadidos = []; // Array para rastrear qué deportes se añadieron
+```
+
+### Additional Sports List:
+1. **Golf**
+2. **Boxeo** (Boxing)
+3. **Bádminton** (Badminton)
+4. **Frontón** (Frontón)
+5. **Hockey**
+
+<Info>
+Additional sports are added in order. When you click "Añadir deporte", the next sport in the list is added to the form.
+</Info>
+
+---
+
+## Adding Sports
+
+Users can add additional sports using the "Añadir deporte" button:
+
+```html
+<button type="button" id="añadirBOM">Añadir deporte</button>
+```
+
+### Add Sport Functionality:
+
+```javascript
+document.getElementById("añadirBOM").addEventListener("click", function (e) {
+    e.preventDefault();
+    var msgMods = document.getElementById('msgMods');
+
+    if (deportesAñadidos.length < deportes.length) {
+        let lista = document.getElementById("listDeportes");
+        let deporte = deportes[deportesAñadidos.length];
+
+        let label = document.createElement("label");
+        let input = document.createElement("input");
+
+        input.type = "checkbox";
+        input.className = "deporte añadido";
+        input.name = "deportes";
+        input.value = deporte.toLowerCase();
+
+        input.addEventListener('change', validarCheckboxes);
+
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(" " + deporte));
+        lista.appendChild(label);
+
+        deportesAñadidos.push({
+            deporte: deporte,
+            label: label
+        });
+        validarCheckboxes();
+    } else {
+        msgMods.style.color = '#d62323';
+        msgMods.textContent = 'Llegaste al límite, no hay más deportes :(';
+    }
+});
+```
+
+**How it works:**
+1. Click the "Añadir deporte" button
+2. The next sport from the list is dynamically created and added to the form
+3. The new sport checkbox is automatically configured with validation
+4. The validation counter updates to reflect the new total
+
+<Warning>
+You can add a maximum of 5 additional sports. Once you reach the limit, you'll see the message: "Llegaste al límite, no hay más deportes :("
+</Warning>
+
+---
+
+## Removing Sports
+
+Users can remove dynamically added sports using the "Eliminar deporte" button:
+
+```html
+<button type="button" id="eliminarBOM">Eliminar deporte</button>
+```
+
+### Remove Sport Functionality:
+
+```javascript
+document.getElementById("eliminarBOM").addEventListener("click", function (e) {
+    e.preventDefault();
+    const msgMods = document.getElementById('msgMods');
+
+    if (deportesAñadidos.length > 0) {
+        let ultimo = deportesAñadidos.pop();
+        ultimo.label.remove(); // Elimina el label y el checkbox dentro
+
+        // Volver a contar después de eliminar
+        validarCheckboxes();
+    }
+});
+```
+
+**How it works:**
+1. Click the "Eliminar deporte" button
+2. The most recently added sport is removed from the form
+3. The validation counter updates automatically
+4. Sports are removed in reverse order (last added, first removed)
+
+<Note>
+Only dynamically added sports can be removed. The 4 default sports (Natación, Fútbol, Pádel, Tenis) are permanent and cannot be removed.
+</Note>
+
+---
+
+## Selection Validation
+
+The form validates sport selections in real-time:
+
+```javascript
+function validarCheckboxes() {
+    var checkboxes = document.querySelectorAll('input[name="deportes"]:checked');
+    var msgMods = document.getElementById('msgMods');
+    var seleccionados = checkboxes.length;
+
+    if (seleccionados < 1) {
+        msgMods.style.color = '#d62323';
+        msgMods.textContent = 'Debe seleccionar al menos 1 deporte';
+        return false;
+    } else if (seleccionados > 3) {
+        msgMods.style.color = '#d62323';
+        msgMods.textContent = 'No puedes seleccionar mas de 3 deportes';
+        return false;
+    } else {
+        msgMods.style.color = '#0c7a3c';
+        msgMods.textContent = 'Válido (' + seleccionados + ' seleccionados)';
+        return true;
+    }
+}
+
+// Event listener corregido
+document.getElementById('listDeportes').addEventListener('change', validarCheckboxes);
+```
+
+### Validation Rules:
+
+<CardGroup cols={2}>
+  <Card title="Minimum" icon="1">
+    At least **1 sport** must be selected
+  </Card>
+  <Card title="Maximum" icon="3">
+    No more than **3 sports** can be selected
+  </Card>
+</CardGroup>
+
+### Validation Messages:
+
+| Condition | Message | Color |
+|-----------|---------|-------|
+| Less than 1 selected | "Debe seleccionar al menos 1 deporte" | Red (#d62323) |
+| More than 3 selected | "No puedes seleccionar mas de 3 deportes" | Red (#d62323) |
+| 1-3 selected | "Válido (X seleccionados)" | Green (#0c7a3c) |
+
+---
+
+## Visual Feedback
+
+The validation message appears below the sport checkboxes:
+
+```html
+<small class="msg" id="msgMods"></small>
+```
+
+<Steps>
+  <Step title="No Selection">
+    Red message: "Debe seleccionar al menos 1 deporte"
+  </Step>
+  <Step title="Valid Selection">
+    Green message: "Válido (X seleccionados)" where X is the count
+  </Step>
+  <Step title="Too Many">
+    Red message: "No puedes seleccionar mas de 3 deportes"
+  </Step>
+</Steps>
+
+---
+
+## Complete Sports List
+
+Here's a comprehensive view of all 9 available sports:
+
+### Permanent Sports (Always Visible):
+1. Natación (Swimming)
+2. Fútbol (Soccer)
+3. Pádel (Padel)
+4. Tenis (Tennis)
+
+### Optional Sports (Can Be Added):
+5. Golf
+6. Boxeo (Boxing)
+7. Bádminton (Badminton)
+8. Frontón (Frontón)
+9. Hockey
+
+---
+
+## Example Usage
+
+<Accordion title="Example: Adding Multiple Sports">
+  1. Form loads with 4 default sports (Natación, Fútbol, Pádel, Tenis)
+  2. Click "Añadir deporte" → Golf is added
+  3. Click "Añadir deporte" → Boxeo is added
+  4. Click "Añadir deporte" → Bádminton is added
+  5. Select: Natación, Golf, and Boxeo (3 total - valid)
+  6. Validation shows: "Válido (3 seleccionados)" in green
+</Accordion>
+
+<Accordion title="Example: Removing Added Sports">
+  1. You have added Golf, Boxeo, and Bádminton
+  2. Click "Eliminar deporte" → Bádminton is removed (last added)
+  3. Click "Eliminar deporte" → Boxeo is removed
+  4. Click "Eliminar deporte" → Golf is removed
+  5. Back to 4 default sports only
+</Accordion>
+
+---
+
+## Form Submission
+
+During form submission, the validation checks both original and dynamically added sports:
+
+```javascript
+// Contar todos los checkboxes con name="deportes" (originales)
+var checkboxesOriginales = document.querySelectorAll('input[name="deportes"]:checked');
+var totalSeleccionados = checkboxesOriginales.length;
+
+// Contar checkboxes añadidos dinámicamente
+var checkboxesAñadidos = document.querySelectorAll('.deporte.añadido:checked');
+totalSeleccionados += checkboxesAñadidos.length;
+
+if (totalSeleccionados < 1 || totalSeleccionados > 3) {
+    hayErrores = true;
+    erroresTexto = erroresTexto + "• Deportes\n";
+}
+```
+
+<Warning>
+The form will not submit if sport selection is invalid. You must have between 1 and 3 sports selected.
+</Warning>

@@ -1,0 +1,240 @@
+---
+title: "Adding Sports"
+description: "How to add or modify sports options in the registration form"
+---
+
+The Club Las Aves registration form allows users to select sports they're interested in. The form includes default sports and provides the ability to dynamically add more options.
+
+## Default Sports
+
+The form includes four default sports in the HTML:
+
+```html
+<div class="listDeportes" id="listDeportes">
+    <label>
+        <input type="checkbox" name="deportes" value="natacion">
+        Natación
+    </label>
+    <label>
+        <input type="checkbox" name="deportes" value="futbol">
+        Fútbol
+    </label>
+    <label>
+        <input type="checkbox" name="deportes" value="padel">
+        Pádel
+    </label>
+    <label>
+        <input type="checkbox" name="deportes" value="tenis">
+        Tenis
+    </label>
+</div>
+```
+
+## Additional Sports Array
+
+Additional sports that can be dynamically added are defined in `app.js`:
+
+```javascript
+let deportes = ["Golf", "Boxeo", "Bádminton", "Frontón", "Hockey"];
+let deportesAñadidos = []; // Array to track added sports
+```
+
+## Dynamic Add System
+
+Users can add sports from the `deportes` array by clicking the "Añadir deporte" button:
+
+```javascript
+document.getElementById("añadirBOM").addEventListener("click", function (e) {
+    e.preventDefault();
+    var msgMods = document.getElementById('msgMods');
+
+    if (deportesAñadidos.length < deportes.length) {
+        let lista = document.getElementById("listDeportes");
+        let deporte = deportes[deportesAñadidos.length];
+
+        let label = document.createElement("label");
+        let input = document.createElement("input");
+
+        input.type = "checkbox";
+        input.className = "deporte añadido";
+        input.name = "deportes";
+        input.value = deporte.toLowerCase();
+
+        input.addEventListener('change', validarCheckboxes);
+
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(" " + deporte));
+        lista.appendChild(label);
+
+        deportesAñadidos.push({
+            deporte: deporte,
+            label: label
+        });
+        validarCheckboxes();
+    } else {
+        msgMods.style.color = '#d62323';
+        msgMods.textContent = 'Llegaste al límite, no hay más deportes :(';
+    }
+});
+```
+
+## Remove Sports Dynamically
+
+The "Eliminar deporte" button removes the most recently added sport:
+
+```javascript
+document.getElementById("eliminarBOM").addEventListener("click", function (e) {
+    e.preventDefault();
+    const msgMods = document.getElementById('msgMods');
+
+    if (deportesAñadidos.length > 0) {
+        let ultimo = deportesAñadidos.pop();
+        ultimo.label.remove();
+        validarCheckboxes();
+    }
+});
+```
+
+## Customization Examples
+
+### Adding More Sports to the Dynamic Array
+
+To add more sports to the dynamic list, simply expand the `deportes` array:
+
+```javascript
+let deportes = [
+    "Golf", 
+    "Boxeo", 
+    "Bádminton", 
+    "Frontón", 
+    "Hockey",
+    "Voleibol",      // New sport
+    "Baloncesto",    // New sport
+    "Rugby",         // New sport
+    "Atletismo"      // New sport
+];
+```
+
+### Adding Default Sports in HTML
+
+To add more default sports visible from the start, add new label blocks in `index.html`:
+
+```html
+<div class="listDeportes" id="listDeportes">
+    <!-- Existing sports -->
+    <label>
+        <input type="checkbox" name="deportes" value="natacion">
+        Natación
+    </label>
+    <label>
+        <input type="checkbox" name="deportes" value="futbol">
+        Fútbol
+    </label>
+    <label>
+        <input type="checkbox" name="deportes" value="padel">
+        Pádel
+    </label>
+    <label>
+        <input type="checkbox" name="deportes" value="tenis">
+        Tenis
+    </label>
+    
+    <!-- New default sports -->
+    <label>
+        <input type="checkbox" name="deportes" value="voleibol">
+        Voleibol
+    </label>
+    <label>
+        <input type="checkbox" name="deportes" value="baloncesto">
+        Baloncesto
+    </label>
+</div>
+```
+
+### Changing Sport Names
+
+To change sport names:
+
+<Steps>
+  <Step title="Update HTML">
+    Change the display text and value in the HTML checkboxes:
+    ```html
+    <label>
+        <input type="checkbox" name="deportes" value="swimming">
+        Swimming
+    </label>
+    ```
+  </Step>
+  
+  <Step title="Update JavaScript array">
+    Update the sport names in the `deportes` array:
+    ```javascript
+    let deportes = ["Golf", "Boxing", "Badminton", "Squash", "Hockey"];
+    ```
+  </Step>
+</Steps>
+
+### Customizing Sport Limits
+
+The form validates that users select between 1 and 3 sports. To change these limits, modify the validation function:
+
+```javascript
+function validarCheckboxes() {
+    var checkboxes = document.querySelectorAll('input[name="deportes"]:checked');
+    var msgMods = document.getElementById('msgMods');
+    var seleccionados = checkboxes.length;
+
+    if (seleccionados < 1) {
+        msgMods.style.color = '#d62323';
+        msgMods.textContent = 'Debe seleccionar al menos 1 deporte';
+        return false;
+    } else if (seleccionados > 5) {  // Changed from 3 to 5
+        msgMods.style.color = '#d62323';
+        msgMods.textContent = 'No puedes seleccionar mas de 5 deportes';
+        return false;
+    } else {
+        msgMods.style.color = '#0c7a3c';
+        msgMods.textContent = 'Válido (' + seleccionados + ' seleccionados)';
+        return true;
+    }
+}
+```
+
+<Note>
+Remember to update the validation in both the real-time `validarCheckboxes()` function and the submit validation in the `Enviar` button event listener.
+</Note>
+
+## Complete Example: Adding Water Sports
+
+Here's a complete example of replacing the sports with water sports:
+
+**index.html:**
+```html
+<div class="listDeportes" id="listDeportes">
+    <label>
+        <input type="checkbox" name="deportes" value="natacion">
+        Natación
+    </label>
+    <label>
+        <input type="checkbox" name="deportes" value="waterpolo">
+        Waterpolo
+    </label>
+    <label>
+        <input type="checkbox" name="deportes" value="surf">
+        Surf
+    </label>
+    <label>
+        <input type="checkbox" name="deportes" value="vela">
+        Vela
+    </label>
+</div>
+```
+
+**app.js:**
+```javascript
+let deportes = ["Kayak", "Buceo", "Windsurf", "Paddleboard", "Remo"];
+```
+
+<Tip>
+When adding new sports, ensure the `value` attribute uses lowercase and no spaces for consistency with form processing.
+</Tip>

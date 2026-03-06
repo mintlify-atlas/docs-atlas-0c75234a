@@ -1,0 +1,609 @@
+---
+title: "Getting Started"
+description: "Quick setup guide to get the Club Las Aves registration form up and running"
+---
+
+## Welcome to Club Las Aves
+
+This guide will walk you through setting up and running the Club Las Aves registration form on your local machine. The application is a frontend-only solution that requires no backend infrastructure, database, or build tools.
+
+<Note>
+  This is a **pure frontend application** - no server, no database, no build process required. Just open the HTML file in your browser!
+</Note>
+
+---
+
+## Prerequisites
+
+The only requirement to run this application is a modern web browser.
+
+<CardGroup cols={3}>
+  <Card title="Chrome" icon="chrome">
+    Version 90+
+  </Card>
+  <Card title="Firefox" icon="firefox">
+    Version 88+
+  </Card>
+  <Card title="Safari" icon="safari">
+    Version 14+
+  </Card>
+  <Card title="Edge" icon="edge">
+    Version 90+
+  </Card>
+  <Card title="Opera" icon="opera">
+    Version 76+
+  </Card>
+  <Card title="Mobile Browsers" icon="mobile">
+    Any modern mobile browser
+  </Card>
+</CardGroup>
+
+<Info>
+  The application uses standard web APIs available in all modern browsers. No transpilation or polyfills needed!
+</Info>
+
+---
+
+## File Structure Overview
+
+The application consists of three main files in the `APPLICATION` directory:
+
+```plaintext
+Proyecto_Formulario/
+└── APPLICATION/
+    ├── index.html    # Main HTML structure
+    ├── app.js        # JavaScript validation and functionality
+    └── style.css     # Styling and animations
+```
+
+### File Responsibilities
+
+<Accordion title="index.html - Application Structure">
+  The main HTML file contains:
+  
+  - **Semantic HTML5 structure** with proper form elements
+  - **Two form sections** separated into `box-1` and `box-2` containers
+  - **Form inputs** for name, last name, age, email, and phone
+  - **Sports selection** with checkboxes (Natación, Fútbol, Pádel, Tenis)
+  - **Disability dropdown** for accessibility compliance
+  - **Action buttons** for adding/removing sports, submitting, and resetting
+  - **External dependencies**: Animate.css CDN for animations
+  
+  ```html index.html
+  <!DOCTYPE html>
+  <html lang="es">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title></title>
+          <link rel="stylesheet" href="style.css">
+          <link
+              rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+          <script src="app.js" defer></script>
+      </head>
+      <body>
+          <h1 class="animate__backInUp" id="club">Club Las Aves</h1>
+          <!-- Form sections... -->
+      </body>
+  </html>
+  ```
+</Accordion>
+
+<Accordion title="app.js - Validation & Interactivity">
+  The JavaScript file implements:
+  
+  - **Real-time input validation** for all form fields
+  - **Visual feedback system** with color-coded borders and messages
+  - **Dynamic DOM manipulation** for adding/removing sports
+  - **Spanish phone validation** using regex pattern `/^[679][0-9]{8}$/`
+  - **Checkbox validation** (1-3 sports required)
+  - **localStorage integration** for form data persistence
+  - **Dark mode toggle** functionality
+  - **Form submission handling** with comprehensive error checking
+  - **Reset functionality** to clear all inputs and validation states
+  
+  Key validation functions:
+  - `validarTelefono()` - Spanish phone number validation
+  - `validarCheckboxes()` - Sports selection validation
+  - `guardarDatos()` - localStorage persistence
+  
+  ```javascript app.js
+  // Example: Name validation with number removal
+  document.getElementById("nombre").addEventListener("input", function () {
+      var nombre = this.value.replace(/[0-9]/g, '');
+      this.value = nombre;
+      
+      if (nombre.length < 2 || nombre.length > 16) {
+          this.style.borderColor = "#ff6b6b";
+          this.style.backgroundColor = "#fff5f5";
+      } else {
+          this.style.borderColor = "#33c446ff";
+          this.style.backgroundColor = "#f0fff8";
+      }
+  });
+  ```
+</Accordion>
+
+<Accordion title="style.css - Design & Animations">
+  The stylesheet provides:
+  
+  - **Sticky note aesthetic** with gradient backgrounds and pin effects
+  - **Responsive flexbox layout** that adapts to all screen sizes
+  - **CSS animations** including fadeIn and pinShadow keyframes
+  - **Dark mode styles** with `.dark-mode` class overrides
+  - **Button styling** with gradients and hover effects
+  - **Form input styling** with focus states and transitions
+  - **Mobile breakpoints** at 768px and 480px
+  - **Custom select styling** for the disability dropdown
+  
+  Color scheme:
+  - Valid inputs: Green (`#33c446ff`)
+  - Invalid inputs: Red (`#ff6b6b`)
+  - Primary buttons: Purple gradient
+  - Add button: Green gradient
+  - Remove button: Red gradient
+  
+  ```css style.css
+  .box-1, .box-2 {
+      background: linear-gradient(135deg, #fffacd 0%, #fef9c0 100%);
+      border-radius: 3px;
+      animation: fadeIn 0.8s ease-out;
+      transform: rotate(-1deg);
+  }
+  
+  @keyframes fadeIn {
+      from {
+          opacity: 0;
+          transform: translateY(15px);
+      }
+      to {
+          opacity: 1;
+          transform: translateY(0);
+      }
+  }
+  ```
+</Accordion>
+
+---
+
+## Quick Start
+
+Get the application running in 3 simple steps:
+
+<Steps>
+  <Step title="Navigate to the APPLICATION directory">
+    Open your file explorer and navigate to:
+    
+    ```bash
+    ~/workspace/source/Proyecto_Formulario/APPLICATION/
+    ```
+    
+    You should see three files:
+    - `index.html`
+    - `app.js`
+    - `style.css`
+  </Step>
+  
+  <Step title="Open index.html in your browser">
+    Double-click `index.html` or right-click and select "Open with" your preferred browser.
+    
+    Alternatively, you can drag and drop the file into an open browser window.
+    
+    <Info>
+      The application works entirely client-side, so you can open it directly from the file system. No web server required!
+    </Info>
+  </Step>
+  
+  <Step title="Start using the form">
+    The registration form will load immediately with:
+    
+    - Animated "Club Las Aves" title
+    - Two sticky note-styled form sections
+    - Real-time validation feedback
+    - Dark mode toggle button
+    
+    Try typing in the fields to see the instant validation feedback!
+  </Step>
+</Steps>
+
+---
+
+## Alternative: Using a Local Server
+
+While not required, you may prefer to run the application through a local development server:
+
+<Accordion title="Option 1: Python HTTP Server">
+  If you have Python installed:
+  
+  ```bash
+  # Navigate to the APPLICATION directory
+  cd ~/workspace/source/Proyecto_Formulario/APPLICATION/
+  
+  # Python 3
+  python -m http.server 8000
+  
+  # Python 2
+  python -m SimpleHTTPServer 8000
+  ```
+  
+  Then open: `http://localhost:8000`
+</Accordion>
+
+<Accordion title="Option 2: Node.js http-server">
+  If you have Node.js installed:
+  
+  ```bash
+  # Install http-server globally (one-time)
+  npm install -g http-server
+  
+  # Navigate to the APPLICATION directory
+  cd ~/workspace/source/Proyecto_Formulario/APPLICATION/
+  
+  # Start the server
+  http-server -p 8000
+  ```
+  
+  Then open: `http://localhost:8000`
+</Accordion>
+
+<Accordion title="Option 3: VS Code Live Server">
+  If you use Visual Studio Code:
+  
+  1. Install the "Live Server" extension
+  2. Right-click on `index.html`
+  3. Select "Open with Live Server"
+  
+  The application will open automatically in your default browser with hot-reload enabled.
+</Accordion>
+
+<Warning>
+  Using a local server is **optional** and provides no functional benefits for this application. It's useful if you plan to modify the code and want automatic browser refreshes.
+</Warning>
+
+---
+
+## Configuration Options
+
+While the application works out-of-the-box, you can customize certain aspects by modifying the source files.
+
+### Customizable Settings
+
+#### Validation Rules
+
+You can adjust validation constraints in `app.js`:
+
+```javascript app.js
+// Name length (currently 2-16 characters)
+if (nombre.length < 2 || nombre.length > 16) {
+
+// Age range (currently 16-121)
+if (isNaN(edad) || edad < 16 || edad > 121) {
+
+// Sports selection (currently 1-3)
+if (seleccionados < 1 || seleccionados > 3) {
+
+// Phone regex (Spanish format)
+var telefonoRegex = /^[679][0-9]{8}$/;
+```
+
+#### Available Sports
+
+Modify the sports array to change additional sports options:
+
+```javascript app.js
+let deportes = ["Golf", "Boxeo", "Bádminton", "Frontón", "Hockey"];
+```
+
+Default sports are defined in the HTML and include:
+- Natación (Swimming)
+- Fútbol (Football/Soccer)
+- Pádel (Padel)
+- Tenis (Tennis)
+
+#### Color Scheme
+
+Customize the color palette in `style.css`:
+
+```css style.css
+/* Valid input colors */
+border-color: #33c446ff;  /* Green border */
+background-color: #f0fff8; /* Light green background */
+
+/* Invalid input colors */
+border-color: #ff6b6b;     /* Red border */
+background-color: #fff5f5; /* Light red background */
+
+/* Primary gradient (sticky notes) */
+background: linear-gradient(135deg, #fffacd 0%, #fef9c0 100%);
+
+/* Dark mode background */
+body.dark-mode {
+    background: #1a1a1a !important;
+}
+```
+
+#### Disability Options
+
+Modify the disability dropdown options in `index.html`:
+
+```html index.html
+<select name="discapacidades" required>
+    <option value></option>
+    <option value="No tengo">No tengo</option>
+    <option value="Tengo un 33%">Tengo un 33%</option>
+    <option value="Tengo un 75%">Tengo un 75%</option>
+    <!-- Add more options as needed -->
+</select>
+```
+
+---
+
+## Understanding the Application Flow
+
+<Steps>
+  <Step title="Page Load">
+    When the page loads:
+    
+    1. The browser parses `index.html`
+    2. `style.css` is loaded and applied (animations begin)
+    3. `app.js` loads with `defer` attribute (after DOM is ready)
+    4. Animate.css library loads from CDN
+    5. localStorage is checked for saved form data
+    6. If saved data exists, form fields are auto-populated
+    
+    ```javascript app.js
+    window.addEventListener('load', function () {
+        const guardado = localStorage.getItem('formDatos');
+        if (guardado) {
+            const datos = JSON.parse(guardado);
+            // Populate fields...
+        }
+    });
+    ```
+  </Step>
+  
+  <Step title="User Input">
+    As the user types:
+    
+    1. `input` event listeners trigger for each field
+    2. Validation functions execute in real-time
+    3. Visual feedback updates immediately (border colors, messages)
+    4. Data is saved to localStorage automatically
+    5. Numbers are removed from name/surname fields
+    
+    <Info>
+      Every keystroke triggers validation - there's no "blur" delay. Users see feedback instantly!
+    </Info>
+  </Step>
+  
+  <Step title="Dynamic Interactions">
+    User interactions with buttons:
+    
+    - **"Añadir deporte"**: Creates new checkbox element, appends to DOM, attaches validation
+    - **"Eliminar deporte"**: Removes last added sport from DOM and tracking array
+    - **"Cambiar color"**: Toggles `dark-mode` class on `<body>`
+    - **Sports checkboxes**: Triggers validation to ensure 1-3 selections
+  </Step>
+  
+  <Step title="Form Submission">
+    When the user clicks "Inscribirse" (Submit):
+    
+    1. `preventDefault()` stops default form submission
+    2. All fields are validated comprehensively
+    3. Errors are collected in an array
+    4. If errors exist, alert shows list of invalid fields
+    5. If valid, success alert appears
+    6. localStorage is cleared (optional)
+    
+    ```javascript app.js
+    document.getElementById('Enviar').addEventListener('click', function (e) {
+        e.preventDefault();
+        
+        var hayErrores = false;
+        var erroresTexto = "";
+        
+        // Validate all fields...
+        
+        if (hayErrores) {
+            alert('ERROR: Campos no válidos:\n' + erroresTexto);
+            return;
+        }
+        
+        alert('Formulario enviado correctamente');
+    });
+    ```
+  </Step>
+  
+  <Step title="Form Reset">
+    When "Limpiar Todo" (Clear All) is clicked:
+    
+    1. All form elements are reset to default values
+    2. Validation messages are cleared
+    3. Input borders return to default state
+    4. localStorage data remains (not cleared)
+    
+    ```javascript app.js
+    document.getElementById("Reset").addEventListener("click", () => {
+        document.querySelectorAll("form").forEach(form => form.reset());
+        document.querySelectorAll(".msg").forEach(msg => msg.textContent = "");
+        document.querySelectorAll("input").forEach(input => input.className = "DefaultBorder");
+    });
+    ```
+  </Step>
+</Steps>
+
+---
+
+## Browser Compatibility
+
+The application uses standard JavaScript features available in modern browsers:
+
+### Required Browser Features
+
+- **localStorage API** - For form data persistence
+- **addEventListener** - For event handling
+- **querySelector/querySelectorAll** - For DOM selection
+- **classList.toggle** - For dark mode
+- **Arrow functions** - ES6 syntax
+- **Template literals** - For string formatting
+- **Flexbox** - For responsive layout
+- **CSS animations** - For visual effects
+
+<Note>
+  All features used are widely supported. No transpilation or polyfills needed for browsers released after 2020.
+</Note>
+
+### Testing Checklist
+
+Before deploying, test these key features:
+
+- [ ] All form fields validate correctly
+- [ ] Dark mode toggle works
+- [ ] Sports can be added (up to 5 additional)
+- [ ] Sports can be removed (most recent first)
+- [ ] Phone validation accepts valid Spanish numbers (6/7/9 prefix)
+- [ ] Form data persists after page refresh
+- [ ] Form submits only when all fields are valid
+- [ ] Reset button clears all fields and messages
+- [ ] Layout is responsive on mobile devices
+- [ ] Animations play smoothly
+
+---
+
+## Troubleshooting
+
+<Accordion title="Form doesn't load / Blank page">
+  **Possible causes:**
+  
+  1. JavaScript file not loading
+  2. File path issues
+  3. Browser JavaScript disabled
+  
+  **Solutions:**
+  
+  - Verify all three files are in the same directory
+  - Check browser console for errors (F12)
+  - Ensure JavaScript is enabled in browser settings
+  - Try a different browser
+  - Check that `app.js` has the `defer` attribute in the script tag
+</Accordion>
+
+<Accordion title="Validation not working">
+  **Possible causes:**
+  
+  1. JavaScript errors
+  2. Event listeners not attached
+  3. Element IDs don't match
+  
+  **Solutions:**
+  
+  - Open browser console (F12) and check for errors
+  - Verify element IDs match between HTML and JavaScript:
+    - `#nombre`, `#apellido`, `#edad`, `#email`, `#telefono`
+    - `#msgNombre`, `#msgApellido`, etc.
+  - Refresh the page to reinitialize event listeners
+</Accordion>
+
+<Accordion title="Dark mode not working">
+  **Possible causes:**
+  
+  1. Button event listener not attached
+  2. CSS class not being toggled
+  3. Dark mode styles not loading
+  
+  **Solutions:**
+  
+  - Check that button ID is `change-darkAndLigth`
+  - Verify dark mode CSS exists in `style.css` (lines 720-772)
+  - Inspect element to see if `dark-mode` class is added to `<body>`
+  - Clear browser cache and reload
+</Accordion>
+
+<Accordion title="localStorage not persisting data">
+  **Possible causes:**
+  
+  1. Browser privacy mode
+  2. localStorage disabled
+  3. Storage quota exceeded
+  
+  **Solutions:**
+  
+  - Disable private/incognito browsing mode
+  - Check browser settings for localStorage permissions
+  - Clear existing localStorage data
+  - Try a different browser
+  
+  Test localStorage in console:
+  ```javascript
+  localStorage.setItem('test', 'value');
+  console.log(localStorage.getItem('test'));
+  ```
+</Accordion>
+
+<Accordion title="Animations not playing">
+  **Possible causes:**
+  
+  1. Animate.css CDN not loading
+  2. Browser motion preferences
+  3. Slow internet connection
+  
+  **Solutions:**
+  
+  - Check network tab to verify CDN loaded
+  - Try loading page again
+  - Check if browser has "reduced motion" preference enabled
+  - Download Animate.css locally instead of using CDN
+</Accordion>
+
+<Accordion title="Sports add/remove buttons not working">
+  **Possible causes:**
+  
+  1. Button IDs incorrect
+  2. Event listeners not attached
+  3. DOM manipulation errors
+  
+  **Solutions:**
+  
+  - Verify button IDs: `#añadirBOM` and `#eliminarBOM`
+  - Check console for JavaScript errors
+  - Ensure `listDeportes` container exists in HTML
+  - Verify `deportes` array is defined in `app.js`
+</Accordion>
+
+---
+
+## Next Steps
+
+Now that you have the application running, explore:
+
+<CardGroup cols={2}>
+  <Card title="Features" icon="star" href="/features">
+    Learn about all 7 key features in detail with code examples
+  </Card>
+  <Card title="Customization" icon="palette">
+    Modify colors, validation rules, and sports options
+  </Card>
+  <Card title="Deployment" icon="rocket">
+    Host the application on GitHub Pages, Netlify, or Vercel
+  </Card>
+  <Card title="Accessibility" icon="universal-access">
+    Enhance accessibility with ARIA labels and keyboard navigation
+  </Card>
+</CardGroup>
+
+---
+
+## Support
+
+If you encounter issues not covered in this guide:
+
+1. Check the browser console for error messages
+2. Verify all three files are present and in the same directory
+3. Test in a different modern browser
+4. Ensure you're using a browser released after 2020
+5. Review the [Features](/features) page for detailed implementation examples
+
+<Tip>
+  The application is designed to work without any external dependencies except Animate.css. If you're having issues, try downloading Animate.css locally and updating the link in `index.html`.
+</Tip>

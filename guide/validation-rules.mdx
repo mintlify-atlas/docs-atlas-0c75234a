@@ -1,0 +1,330 @@
+---
+title: "Validation Rules"
+description: "Understanding form validation rules and requirements"
+---
+
+## Overview
+
+The Club Las Aves registration form implements real-time validation for all input fields. As users type, the form automatically checks their input and provides immediate visual feedback.
+
+## Validation System
+
+Validation occurs on two levels:
+1. **Real-time validation** - As users type (using `input` event listeners)
+2. **Submission validation** - When the form is submitted (comprehensive check)
+
+---
+
+## Name Validation
+
+The name field must contain only letters with a specific length requirement.
+
+```javascript
+document.getElementById("nombre").addEventListener("input", function () {
+    var nombreInput = this;
+    var msgNombre = document.getElementById("msgNombre");
+
+    // Eliminar números del valor
+    var nombre = nombreInput.value.replace(/[0-9]/g, '');
+    nombreInput.value = nombre;
+
+    // Validar longitud y contenido
+    if (nombre.length < 2 || nombre.length > 16) {
+        nombreInput.style.borderColor = "#ff6b6b";
+        nombreInput.style.backgroundColor = "#fff5f5";
+        msgNombre.style.color = "#d62323";
+        msgNombre.textContent = "Debe contener 2 caracteres mínimo y no más de 16 caracteres";
+    } else {
+        nombreInput.style.borderColor = "#33c446ff";
+        nombreInput.style.backgroundColor = "#f0fff8";
+        msgNombre.style.color = "#0c7a3c";
+        msgNombre.textContent = "Válido";
+    }
+});
+```
+
+**Rules:**
+- ✅ Minimum 2 characters
+- ✅ Maximum 16 characters
+- ✅ No numbers allowed (automatically removed)
+- ✅ Letters and special characters accepted
+
+**Error message:** "Debe contener 2 caracteres mínimo y no más de 16 caracteres"
+
+**Success message:** "Válido"
+
+---
+
+## Last Name Validation
+
+The last name field follows similar rules to the name field, but with a longer maximum length.
+
+```javascript
+document.getElementById("apellido").addEventListener("input", function () {
+    var apellidoInput = this
+    var msgApellido = document.getElementById("msgApellido")
+
+    var apellido = apellidoInput.value.replace(/[0-9]/g, '');
+    apellidoInput.value = apellido;
+
+    if (apellido.length < 2 || apellido.length > 32) {
+        apellidoInput.style.borderColor = "#ff6b6b";
+        apellidoInput.style.backgroundColor = "#fff5f5";
+        msgApellido.style.color = "#d62323";
+        msgApellido.textContent = "Debe contener 2 caracteres mínimo y no mas de 16 caracteres"
+    } else {
+        apellidoInput.style.borderColor = "#33c446ff";
+        apellidoInput.style.backgroundColor = "#f0fff8";
+        msgApellido.style.color = "#0c7a3c";
+        msgApellido.textContent = "Válido";
+    }
+})
+```
+
+**Rules:**
+- ✅ Minimum 2 characters
+- ✅ Maximum 32 characters
+- ✅ No numbers allowed (automatically removed)
+- ✅ Letters and special characters accepted
+
+**Error message:** "Debe contener 2 caracteres mínimo y no mas de 16 caracteres"
+
+**Success message:** "Válido"
+
+---
+
+## Age Validation
+
+The age field ensures members meet the minimum age requirement for club membership.
+
+```javascript
+document.getElementById("edad").addEventListener("input", function () {
+    var edadInput = this;
+    var msgEdad = document.getElementById("msgEdad");
+    var edad = parseInt(edadInput.value);
+
+    if (isNaN(edad) || edad < 16 || edad > 121) {
+        edadInput.style.borderColor = "#ff6b6b";
+        edadInput.style.backgroundColor = "#fff5f5";
+        msgEdad.style.color = "#d62323";
+        msgEdad.textContent = "Debe ser número entre 16 y 121";
+    } else {
+        edadInput.style.borderColor = "#33c446ff";
+        edadInput.style.backgroundColor = "#f0fff8";
+        msgEdad.style.color = "#0c7a3c";
+        msgEdad.textContent = "Válido";
+    }
+});
+```
+
+**Rules:**
+- ✅ Must be a valid number
+- ✅ Minimum age: 16 years
+- ✅ Maximum age: 121 years
+- ✅ Integer values only
+
+**Error message:** "Debe ser número entre 16 y 121"
+
+**Success message:** "Válido"
+
+---
+
+## Email Validation
+
+The email field performs basic format validation to ensure a valid email structure.
+
+```javascript
+document.getElementById("email").addEventListener("input", function () {
+    var emailInput = this;
+    var msgEmail = document.getElementById("msgEmail");
+    var email = emailInput.value;
+
+    if (email.length < 6 || !email.includes("@") || !email.includes(".")) {
+        emailInput.style.borderColor = "#ff6b6b";
+        emailInput.style.backgroundColor = "#fff5f5";
+        msgEmail.style.color = "#d62323";
+        msgEmail.textContent = "Debe tener @ y ., min 6 chars, no yahoo";
+    } else {
+        emailInput.style.borderColor = "#33c446ff";
+        emailInput.style.backgroundColor = "#f0fff8";
+        msgEmail.style.color = "#0c7a3c";
+        msgEmail.textContent = "Válido";
+    }
+});
+```
+
+**Rules:**
+- ✅ Minimum 6 characters
+- ✅ Must contain `@` symbol
+- ✅ Must contain `.` (period)
+- ✅ Basic email format validation
+
+**Error message:** "Debe tener @ y ., min 6 chars, no yahoo"
+
+**Success message:** "Válido"
+
+---
+
+## Phone Validation
+
+The phone field validates Spanish mobile phone number format.
+
+```javascript
+function validarTelefono() {
+    var telefono = document.getElementById('telefono');
+    var msgTelefono = document.getElementById('msgTelefono');
+    var telefonoValue = telefono.value.trim();
+
+    // Expresión regular para teléfono español (9 dígitos)
+    var telefonoRegex = /^[679][0-9]{8}$/;
+
+    if (telefonoValue === '') {
+        telefono.style.borderColor = "#ff6b6b";
+        telefono.style.backgroundColor = "#fff5f5";
+        msgTelefono.style.color = '#d62323';
+        msgTelefono.textContent = 'El teléfono es obligatorio';
+        return false;
+    } else if (!telefonoRegex.test(telefonoValue)) {
+        telefono.style.borderColor = "#ff6b6b";
+        telefono.style.backgroundColor = "#fff5f5";
+        msgTelefono.style.color = '#d62323';
+        msgTelefono.textContent = 'Teléfono no válido (9 dígitos, empezando por 6, 7 o 9)';
+        return false;
+    } else {
+        telefono.style.borderColor = "#33c446ff";
+        telefono.style.backgroundColor = "#f0fff8";
+        msgTelefono.style.color = '#0c7a3c';
+        msgTelefono.textContent = '✓ Teléfono válido';
+        return true;
+    }
+}
+
+// Event listener para validar en tiempo real mientras se escribe
+document.getElementById('telefono').addEventListener('input', validarTelefono);
+```
+
+**Rules:**
+- ✅ Exactly 9 digits
+- ✅ Must start with 6, 7, or 9
+- ✅ Only numbers (no spaces or special characters)
+- ✅ Required field
+
+**Regex pattern:** `/^[679][0-9]{8}$/`
+
+**Error messages:**
+- "El teléfono es obligatorio" (if empty)
+- "Teléfono no válido (9 dígitos, empezando por 6, 7 o 9)" (if format invalid)
+
+**Success message:** "✓ Teléfono válido"
+
+---
+
+## Sports Selection Validation
+
+Members must select between 1 and 3 sports.
+
+```javascript
+function validarCheckboxes() {
+    var checkboxes = document.querySelectorAll('input[name="deportes"]:checked');
+    var msgMods = document.getElementById('msgMods');
+    var seleccionados = checkboxes.length;
+
+    if (seleccionados < 1) {
+        msgMods.style.color = '#d62323';
+        msgMods.textContent = 'Debe seleccionar al menos 1 deporte';
+        return false;
+    } else if (seleccionados > 3) {
+        msgMods.style.color = '#d62323';
+        msgMods.textContent = 'No puedes seleccionar mas de 3 deportes';
+        return false;
+    } else {
+        msgMods.style.color = '#0c7a3c';
+        msgMods.textContent = 'Válido (' + seleccionados + ' seleccionados)';
+        return true;
+    }
+}
+
+// Event listener corregido
+document.getElementById('listDeportes').addEventListener('change', validarCheckboxes);
+```
+
+**Rules:**
+- ✅ Minimum 1 sport selected
+- ✅ Maximum 3 sports selected
+- ✅ Validates both default and dynamically added sports
+
+**Error messages:**
+- "Debe seleccionar al menos 1 deporte" (if less than 1)
+- "No puedes seleccionar mas de 3 deportes" (if more than 3)
+
+**Success message:** "Válido (X seleccionados)" (where X is the count)
+
+---
+
+## Visual Feedback System
+
+All validation uses a consistent color-coding system:
+
+<Card title="Invalid State" icon="xmark" color="#ff6b6b">
+  - **Border color:** `#ff6b6b` (red)
+  - **Background color:** `#fff5f5` (light red)
+  - **Message color:** `#d62323` (dark red)
+</Card>
+
+<Card title="Valid State" icon="check" color="#33c446ff">
+  - **Border color:** `#33c446ff` (green)
+  - **Background color:** `#f0fff8` (light green)
+  - **Message color:** `#0c7a3c` (dark green)
+</Card>
+
+---
+
+## Form Submission Validation
+
+When the user clicks "Inscribirse" (Submit), all fields are validated again:
+
+```javascript
+document.getElementById('Enviar').addEventListener('click', function (e) {
+    e.preventDefault();
+
+    var hayErrores = false;
+    var erroresTexto = "";
+
+    // Validates: Nombre, Apellido, Edad, Email, Teléfono, 
+    // Deportes, and Discapacidad
+
+    if (hayErrores) {
+        alert('ERROR: Campos no válidos:\n' + erroresTexto);
+        return;
+    }
+
+    alert('Formulario enviado correctamente');
+});
+```
+
+<Warning>
+If any validation fails during submission, an alert displays all invalid fields. The form will not submit until all validations pass.
+</Warning>
+
+---
+
+## Auto-save Feature
+
+The form automatically saves your progress to browser localStorage:
+
+```javascript
+function guardarDatos() {
+    const datos = {
+        nombre: document.getElementById('nombre').value,
+        apellido: document.getElementById('apellido').value,
+        edad: document.getElementById('edad').value,
+        email: document.getElementById('email').value,
+        telefono: document.getElementById('telefono').value
+    };
+    localStorage.setItem('formDatos', JSON.stringify(datos));
+}
+```
+
+<Info>
+Your form data is automatically saved as you type and restored when you return to the page. Data is cleared upon successful form submission.
+</Info>
