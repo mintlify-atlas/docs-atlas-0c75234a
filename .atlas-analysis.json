@@ -1,0 +1,64 @@
+{
+  "projectType": "frontend",
+  "projectName": "Club Las Aves Registration Form",
+  "projectDescription": "An interactive sports club registration form with real-time validation, dynamic form fields, and dark mode support",
+  "theme": "palm",
+  "primaryColor": "#6C63FF",
+  "lightColor": "#48bb78",
+  "darkColor": "#5A52D5",
+  "navigation": {
+    "groups": [
+      {
+        "group": "Overview",
+        "pages": [
+          "introduction",
+          "features",
+          "getting-started"
+        ]
+      },
+      {
+        "group": "User Guide",
+        "pages": [
+          "guide/form-fields",
+          "guide/validation-rules",
+          "guide/sport-selection",
+          "guide/accessibility"
+        ]
+      },
+      {
+        "group": "Technical Reference",
+        "pages": [
+          "technical/form-validation",
+          "technical/dom-manipulation",
+          "technical/local-storage",
+          "technical/styling"
+        ]
+      },
+      {
+        "group": "Customization",
+        "pages": [
+          "customization/theme-modes",
+          "customization/adding-sports",
+          "customization/form-fields"
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Real-time form validation with visual feedback",
+    "Dynamic sport selection with add/remove functionality",
+    "Dark mode toggle for improved accessibility",
+    "Local storage persistence for form data",
+    "Responsive design with animated UI elements",
+    "Spanish phone number validation",
+    "Multi-field form with disability options"
+  ],
+  "publicApiSurface": [
+    "validarTelefono() - Phone number validation function",
+    "validarCheckboxes() - Sport selection validation",
+    "guardarDatos() - Local storage save function",
+    "Form submission event handler",
+    "Dynamic DOM manipulation for sports list",
+    "Dark mode toggle handler"
+  ]
+}
